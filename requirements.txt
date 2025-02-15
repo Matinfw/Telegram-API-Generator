@@ -1,2 +1,1 @@
-lxml
-requests
+pip install python-telegram-bot requests lxml fake_useragent
