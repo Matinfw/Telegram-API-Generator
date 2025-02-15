@@ -1,7 +1,14 @@
+import logging
 import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, CallbackContext
 
+# تنظیمات لاگ برای خطایابی
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# دستورات ربات
 async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("سلام! لطفاً شماره تلفن خود را وارد کنید.")
 
@@ -24,23 +31,25 @@ async def get_api_hash(update: Update, context: CallbackContext) -> None:
     else:
         await update.message.reply_text("لطفاً ابتدا شماره تلفن و پسورد را وارد کنید.")
 
+# تابع اصلی برای شروع ربات
 async def main():
     bot_token = "8068187481:AAH7YdFS2s0A5NltxtHMG25XSJmzgeeyumQ"
 
-    # به جای Updater از Application استفاده می‌کنیم
+    # ایجاد یک شی از Application
     application = Application.builder().token(bot_token).build()
 
-    # فرمان ها
+    # فرمان‌ها را اضافه می‌کنیم
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("get_api_id", get_api_id))
     application.add_handler(CommandHandler("get_api_hash", get_api_hash))
 
     # شروع ربات
+    logger.info("Bot started.")
     await application.run_polling()
 
 if __name__ == '__main__':
     try:
-        asyncio.get_event_loop().run_until_complete(main())
+        asyncio.run(main())  # استفاده از asyncio.run برای اجرای برنامه
     except RuntimeError:  # Catching already running event loop error
         loop = asyncio.get_event_loop()
         loop.create_task(main())  # Use the existing event loop
