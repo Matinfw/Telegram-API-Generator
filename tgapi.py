@@ -48,8 +48,8 @@ async def main():
     await application.run_polling()
 
 if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
     try:
-        asyncio.run(main())  # استفاده از asyncio.run برای اجرای برنامه
+        loop.run_until_complete(main())  # از event loop فعلی استفاده می‌کنیم
     except RuntimeError:  # Catching already running event loop error
-        loop = asyncio.get_event_loop()
-        loop.create_task(main())  # Use the existing event loop
+        loop.create_task(main())  # در صورتی که رویداد قبلاً اجرا شده باشد، از این روش استفاده می‌کنیم
