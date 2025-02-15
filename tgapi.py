@@ -6,7 +6,6 @@ async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("سلام! لطفاً شماره تلفن خود را وارد کنید.")
 
 async def get_api_id(update: Update, context: CallbackContext) -> None:
-    # شماره تلفن از پیام دریافتی
     phone_number = update.message.text.strip()
     telegram_app = TelegramApplication(phone_number)
 
@@ -40,5 +39,8 @@ async def main():
     await application.run_polling()
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    try:
+        asyncio.get_event_loop().run_until_complete(main())
+    except RuntimeError:  # Catching already running event loop error
+        loop = asyncio.get_event_loop()
+        loop.create_task(main())  # Use the existing event loop
